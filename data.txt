@@ -1,0 +1,83 @@
+duration: La duración de la conexión en segundos.
+
+protocol_type: El tipo de protocolo de la conexión (tcp, udp, icmp).
+
+service: El tipo de servicio de red (por ejemplo, http, ftp, smtp, etc.).
+
+flag: El estado de la conexión (por ejemplo, SF, S0, REJ, etc.).
+
+src_bytes: El número de bytes enviados desde el origen al destino.
+
+dst_bytes: El número de bytes enviados desde el destino al origen.
+
+land: Un indicador binario de si la conexión es de tipo LAND (1) o no (0). Una conexión LAND es un ataque donde los paquetes tienen la misma dirección IP de origen y destino.
+
+wrong_fragment: El número de fragmentos erróneos en la conexión.
+
+urgent: El número de paquetes urgentes en la conexión.
+
+hot: El número de operaciones "calientes" en la conexión. Las operaciones "calientes" son aquellas que acceden a archivos del sistema.
+
+num_failed_logins: El número de intentos de inicio de sesión fallidos.
+
+logged_in: Un indicador binario de si el inicio de sesión fue exitoso (1) o no (0).
+
+num_compromised: El número de "compromisos" (por ejemplo, advertencias de seguridad) en la conexión.
+
+root_shell: Un indicador binario de si una shell raíz (root shell) fue obtenida (1) o no (0).
+
+su_attempted: El número de intentos de cambiar a superusuario (su root).
+
+num_root: El número de accesos a la cuenta raíz (root).
+
+num_file_creations: El número de operaciones de creación de archivos.
+
+num_shells: El número de shells obtenidas.
+
+num_access_files: El número de operaciones de acceso a archivos.
+
+num_outbound_cmds: El número de comandos outbound en una conexión ftp.
+
+is_host_login: Un indicador binario de si el inicio de sesión es de un host (1) o no (0).
+
+is_guest_login: Un indicador binario de si el inicio de sesión es de un usuario invitado (1) o no (0).
+
+count: El número de conexiones al mismo host en las últimas 2 segundos.
+
+srv_count: El número de conexiones al mismo servicio en las últimas 2 segundos.
+
+serror_rate: La tasa de errores "SYN" en las conexiones.
+
+srv_serror_rate: La tasa de errores "SYN" en las conexiones a los mismos servicios.
+
+rerror_rate: La tasa de errores "REJ" en las conexiones.
+
+srv_rerror_rate: La tasa de errores "REJ" en las conexiones a los mismos servicios.
+
+same_srv_rate: La tasa de conexiones al mismo servicio.
+
+diff_srv_rate: La tasa de conexiones a diferentes servicios.
+
+srv_diff_host_rate: La tasa de conexiones a diferentes hosts en los mismos servicios.
+
+dst_host_count: El número de conexiones al mismo host objetivo en las últimas 2 segundos.
+
+dst_host_srv_count: El número de conexiones al mismo servicio en el host objetivo en las últimas 2 segundos.
+
+dst_host_same_srv_rate: La tasa de conexiones al mismo servicio en el host objetivo.
+
+dst_host_diff_srv_rate: La tasa de conexiones a diferentes servicios en el host objetivo.
+
+dst_host_same_src_port_rate: La tasa de conexiones al mismo servicio en el host objetivo y desde el mismo puerto de origen.
+
+dst_host_srv_diff_host_rate: La tasa de conexiones a diferentes hosts en el mismo servicio del host objetivo.
+
+dst_host_serror_rate: La tasa de errores "SYN" en las conexiones al host objetivo.
+
+dst_host_srv_serror_rate: La tasa de errores "SYN" en las conexiones al mismo servicio del host objetivo.
+
+dst_host_rerror_rate: La tasa de errores "REJ" en las conexiones al host objetivo.
+
+dst_host_srv_rerror_rate: La tasa de errores "REJ" en las conexiones al mismo servicio del host objetivo.
+
+class: La clase de la conexión: 'normal' indica tráfico normal y 'anomaly' indica tráfico anómalo o sospechoso.
