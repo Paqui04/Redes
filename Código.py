@@ -1,8 +1,12 @@
 import pandas as pd
-from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import classification_report, accuracy_score
+from sklearn.metrics import classification_report, accuracy_score, precision_score, recall_score, f1_score, log_loss, cohen_kappa_score, confusion_matrix
 from sklearn.preprocessing import OrdinalEncoder, LabelEncoder
+from sklearn.model_selection import train_test_split, RandomizedSearchCV
+from imblearn.over_sampling import SMOTE
+import matplotlib.pyplot as plt
+import seaborn as sns
+from scipy.stats import randint
 
 column_names = [
     'duration', 'protocol_type', 'service', 'flag', 'src_bytes', 'dst_bytes',
@@ -16,8 +20,8 @@ column_names = [
     'dst_host_rerror_rate', 'dst_host_srv_rerror_rate', 'label'
 ]
 
-df_train = pd.read_csv('KDDTrain+.csv', names=column_names)
-df_test = pd.read_csv('KDDTest+.csv', names=column_names)
+df_train = pd.read_csv('KDDTrain+2.csv', names=column_names)
+df_test = pd.read_csv('KDDTest+2.csv', names=column_names)
 
 X_train = df_train.drop('label', axis=1)
 y_train = df_train['label']
@@ -33,10 +37,44 @@ label_encoder = LabelEncoder()
 y_train = label_encoder.fit_transform(y_train)
 y_test = label_encoder.transform(y_test)
 
-clf = RandomForestClassifier(n_estimators=100, random_state=42)
-clf.fit(X_train, y_train)
+smote = SMOTE(random_state=42)
+X_train_resampled, y_train_resampled = smote.fit_resample(X_train, y_train)
 
-y_pred = clf.predict(X_test)
+param_dist = {
+    'n_estimators': randint(50, 200),
+    'max_features': ['sqrt', 'log2'],
+    'max_depth': randint(10, 100),
+    'min_samples_split': randint(2, 20),
+    'min_samples_leaf': randint(1, 20),
+    'bootstrap': [True, False]
+}
 
-print("Accuracy:", accuracy_score(y_test, y_pred))
+clf = RandomForestClassifier(random_state=42)
+random_search = RandomizedSearchCV(clf, param_distributions=param_dist, n_iter=10, scoring='recall_weighted', cv=3, verbose=2, random_state=42, n_jobs=-1)
+random_search.fit(X_train_resampled, y_train_resampled)
+
+print("Best Parameters:")
+print(random_search.best_params_)
+
+best_clf = random_search.best_estimator_
+
+y_pred = best_clf.predict(X_test)
+y_prob = best_clf.predict_proba(X_test)
+
+print("\nAccuracy:", accuracy_score(y_test, y_pred))
 print("Classification Report:\n", classification_report(y_test, y_pred))
+
+print("Precision:", precision_score(y_test, y_pred, average='weighted'))
+print("Recall:", recall_score(y_test, y_pred, average='weighted'))
+print("F1 Score:", f1_score(y_test, y_pred, average='weighted'))
+
+print("Log Loss:", log_loss(y_test, y_prob))
+print("Cohen's Kappa:", cohen_kappa_score(y_test, y_pred))
+
+cm = confusion_matrix(y_test, y_pred)
+plt.figure(figsize=(12, 8))
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=label_encoder.classes_, yticklabels=label_encoder.classes_)
+plt.title('Confusion Matrix')
+plt.xlabel('Predicted')
+plt.ylabel('Actual')
+plt.show()
